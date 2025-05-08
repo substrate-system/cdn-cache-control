@@ -33,7 +33,25 @@ const headers = new CacheHeaders().ttl(ONE_MINUTE).swr();
 ```
 
 <details><summary><h2>Contents</h2></summary>
+
 <!-- toc -->
+
+- [fork](#fork)
+- [Installation](#installation)
+- [Usage](#usage)
+  * [Use cases](#use-cases)
+- [API](#api)
+- [:wrench: Constants](#wrench-constants)
+  * [:gear: ONE_MINUTE](#gear-one_minute)
+  * [:gear: ONE_HOUR](#gear-one_hour)
+  * [:gear: ONE_DAY](#gear-one_day)
+  * [:gear: ONE_WEEK](#gear-one_week)
+  * [:gear: ONE_YEAR](#gear-one_year)
+- [:factory: CacheHeaders](#factory-cacheheaders)
+  * [Methods](#methods)
+
+<!-- tocstop -->
+
 </details>
 
 ## fork
