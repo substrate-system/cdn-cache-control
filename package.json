@@ -26,7 +26,7 @@
 		"build-esm": "esbuild src/*.ts --format=esm --metafile=dist/meta.json --keep-names --tsconfig=tsconfig.build.json --outdir=./dist --sourcemap && tsc --emitDeclarationOnly --project tsconfig.build.json --outDir dist",
 		"lint": "eslint \"./**/*.{ts,js}\"",
 		"test": "npm run build && node --test test",
-		"toc": "markdown-toc --maxdepth 3 -i README.md",
+		"toc": "markdown-toc --maxdepth 4 -i README.md",
 		"build-docs": "typedoc",
 		"version": "npm run toc && auto-changelog -p --template keepachangelog --breaking-pattern 'BREAKING CHANGE:' && git add CHANGELOG.md README.md",
 		"postversion": "git push --follow-tags && npm publish",
