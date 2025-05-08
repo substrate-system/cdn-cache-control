@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "listFiles": true,
-    "module": "NodeNext",
-    "target": "ES2022",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
-    "lib": ["ES2021"],
+    "lib": ["DOM", "ES2021", "DOM.Iterable"],
     "allowJs": false,
     "skipLibCheck": true,
     "outDir": "dist",
@@ -23,7 +23,6 @@
   },
   "include": [
     "src",
-    "test",
-    "lib.es5.d.ts"
+    "test"
   ]
 }

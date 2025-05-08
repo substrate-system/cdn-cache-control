@@ -1,4 +1,7 @@
-/** The CDN that the cache headers are being used with. Will work with other CDNs, but may miss platform-specific headers and directives. */
+/**
+ * The CDN that the cache headers are being used with. Will work with other
+ * CDNs, but may miss platform-specific headers and directives.
+ */
 export type CDN =
   | 'netlify'
   | 'cloudflare'
@@ -30,15 +33,15 @@ const cdnCacheControlHeaderNames = new Map<CDN, string>([
 ])
 
 type Global = typeof globalThis & {
-  process?: {
-    env?: {
-      CDN?: string;
-      VERCEL?: string;
+  process?:{
+    env?:{
+      CDN?:string;
+      VERCEL?:string;
     };
   };
 };
 
-function detectCDN (): CDN | undefined {
+function detectCDN ():CDN|undefined {
     if ((globalThis as Global).process?.env?.CDN) {
         return (globalThis as Global).process.env.CDN as CDN
     }
@@ -53,8 +56,8 @@ function detectCDN (): CDN | undefined {
 }
 
 function parseCacheControlHeader (
-    header?: string | null,
-): Record<string, string> {
+    header?:string|null,
+):Record<string, string> {
     if (!header) {
         return {}
     }
@@ -69,8 +72,8 @@ function parseCacheControlHeader (
 }
 
 function serializeCacheControlHeader (
-    directives: Record<string, string>,
-): string {
+    directives:Record<string, string>,
+):string {
     return Object.entries(directives)
         .map(([key, value]) => {
             return value ? `${key}=${value}` : key
@@ -79,7 +82,7 @@ function serializeCacheControlHeader (
 }
 
 export class CacheHeaders extends Headers {
-    #cdn?: CDN
+    #cdn?:CDN
 
     public constructor (init?:HeadersInit, cdn?:CDN) {
         super(init)
@@ -89,11 +92,10 @@ export class CacheHeaders extends Headers {
         )
         const directives = parseCacheControlHeader(this.get('Cache-Control'))
 
-        const sMaxAge =
-      cdnDirectives['s-maxage'] ??
-      cdnDirectives['max-age'] ??
-      directives['s-maxage'] ??
-      ONE_YEAR.toString()
+        const sMaxAge = (cdnDirectives['s-maxage'] ??
+            cdnDirectives['max-age'] ??
+            directives['s-maxage'] ??
+            ONE_YEAR.toString())
 
         cdnDirectives.public = ''
         cdnDirectives['s-maxage'] = sMaxAge
@@ -103,7 +105,8 @@ export class CacheHeaders extends Headers {
             cdnDirectives[tieredDirective] = ''
         }
 
-        // If the CDN cache-control header is the same as the browser cache-control header, we merge the directives.
+        // If the CDN cache-control header is the same as the browser
+        // cache-control header, we merge the directives.
         if (this.cdnCacheControlHeaderName === 'Cache-Control') {
             Object.assign(directives, cdnDirectives)
         } else {
@@ -120,11 +123,11 @@ export class CacheHeaders extends Headers {
     }
 
     /**
-   * Adds a cache tag to the cache tags header. Cache tags are used to invalidate the cache for a URL.
-   * @param tag The cache tag to add. Can be a string or an array of strings.
-   */
-
-    tag (tag: string | Array<string>, ...tags: Array<string>): this {
+     * Adds a cache tag to the cache tags header. Cache tags are used to
+     * invalidate the cache for a URL.
+     * @param tag The cache tag to add. Can be a string or an array of strings.
+     */
+    tag (tag:string|Array<string>, ...tags:Array<string>):this {
         if (Array.isArray(tag)) {
             tag = tag.join(',')
         }
@@ -133,12 +136,14 @@ export class CacheHeaders extends Headers {
     }
 
     /**
-   * Sets stale-while-revalidate directive for the CDN cache. By default the browser is sent a must-revalidate
-   * directive to ensure that the browser always revalidates the cache with the server.
-   * @param value The number of seconds to set the stale-while-revalidate directive to. Defaults to 1 week.
-   */
-
-    swr (value: number = ONE_WEEK): this {
+     * Sets stale-while-revalidate directive for the CDN cache. By default the
+     * browser is sent a must-revalidate
+     * directive to ensure that the browser always revalidates the cache with
+     * the server.
+     * @param value The number of seconds to set the stale-while-revalidate
+     * directive to. Defaults to 1 week.
+     */
+    swr (value:number = ONE_WEEK):this {
         const cdnDirectives = this.getCdnCacheControl()
         cdnDirectives['stale-while-revalidate'] = value.toString()
         delete cdnDirectives['must-revalidate']
@@ -148,14 +153,16 @@ export class CacheHeaders extends Headers {
     }
 
     /**
-   * Sets cache headers for content that should be cached for a long time and never revalidated.
-   * The CDN cache will cache the content for the specified time, and the browser will cache the content
-   * indefinitely without revalidating. Do not use this unless the URL is fingerprinted or otherwise unique.
-   * Otherwise, the browser will cache the content indefinitely and never check for updates, including for new deploys.
-   * @param value The number of seconds to set the CDN cache-control s-maxage directive to. Defaults to 1 year.
-   */
-
-    immutable (value: number = ONE_YEAR): this {
+     * Sets cache headers for content that should be cached for a long time and
+     * never revalidated. The CDN cache will cache the content for the
+     * specified time, and the browser will cache the content indefinitely
+     * without revalidating. Do not use this unless the URL is fingerprinted or
+     * otherwise unique. Otherwise, the browser will cache the content
+     * indefinitely and never check for updates, including for new deploys.
+     *
+     * @param value The number of seconds to set the CDN cache-control s-maxage directive to. Defaults to 1 year.
+     */
+    immutable (value:number = ONE_YEAR):this {
         const cdnDirectives = this.getCdnCacheControl()
         cdnDirectives.public = ''
         cdnDirectives['s-maxage'] = value.toString()
@@ -174,12 +181,13 @@ export class CacheHeaders extends Headers {
     }
 
     /**
-   * Sets the s-maxage for items in the CDN cache. This is the maximum amount of time that the CDN will cache the content.
-   * If used with swr, the content will revalidate in the background after the max age has passed. Otherwise, the content will be
-   * removed from the cache after the max age has passed.
-   */
-
-    ttl (value: number): this {
+     * Sets the s-maxage for items in the CDN cache. This is the maximum amount
+     * of time that the CDN will cache the content. If used with swr, the
+     * content will revalidate in the background after the max age has passed.
+     * Otherwise, the content will be removed from the cache after the max age
+     * has passed.
+     */
+    ttl (value:number):this {
         const cdnDirectives = this.getCdnCacheControl()
         cdnDirectives['s-maxage'] = value.toString()
         this.setCdnCacheControl(cdnDirectives)
@@ -195,25 +203,23 @@ export class CacheHeaders extends Headers {
     }
 
     /**
-   * Returns the headers as a plain object.
-   */
-
-    toObject (): Record<string, string> {
+     * Returns the headers as a plain object.
+     */
+    toObject ():Record<string, string> {
         return Object.fromEntries(this.entries())
     }
 
     /**
-   * Copy the headers from this instance to another Headers instance.
-   */
-
-    copyTo<T extends Headers> (headers: T): T {
+     * Copy the headers from this instance to another Headers instance.
+     */
+    copyTo<T extends Headers> (headers:T):T {
         this.forEach((value, key) => {
             headers.set(key, value)
         })
         return headers
     }
 
-    private get cacheTagHeaderName (): string {
+    private get cacheTagHeaderName ():string {
         switch (this.#cdn) {
             case 'netlify':
                 return 'Netlify-Cache-Tag'
@@ -224,7 +230,7 @@ export class CacheHeaders extends Headers {
         }
     }
 
-    private get cdnCacheControlHeaderName (): string {
+    private get cdnCacheControlHeaderName ():string {
         return (
             cdnCacheControlHeaderNames.get(this.#cdn ?? '') ?? 'CDN-Cache-Control'
         )
@@ -233,11 +239,11 @@ export class CacheHeaders extends Headers {
     /**
    * The parsed cache-control header for the CDN cache.
    */
-    public getCdnCacheControl (): Record<string, string> {
+    public getCdnCacheControl ():Record<string, string> {
         return parseCacheControlHeader(this.get(this.cdnCacheControlHeaderName))
     }
 
-    public setCdnCacheControl (directives: Record<string, string>): void {
+    public setCdnCacheControl (directives:Record<string, string>):void {
         this.set(
             this.cdnCacheControlHeaderName,
             serializeCacheControlHeader(directives),
@@ -247,11 +253,11 @@ export class CacheHeaders extends Headers {
     /**
    * The parsed cache-control header for the browser cache.
    */
-    public getCacheControl (): Record<string, string> {
+    public getCacheControl ():Record<string, string> {
         return parseCacheControlHeader(this.get('Cache-Control'))
     }
 
-    public setCacheControl (directives: Record<string, string>): void {
+    public setCacheControl (directives:Record<string, string>):void {
         this.set('Cache-Control', serializeCacheControlHeader(directives))
     }
 
@@ -259,11 +265,11 @@ export class CacheHeaders extends Headers {
    * The parsed content of the cache tags header.
    */
 
-    public getCacheTags (): Array<string> {
+    public getCacheTags ():Array<string> {
         return this.get(this.cacheTagHeaderName)?.split(',') ?? []
     }
 
-    public setCacheTags (tags: Array<string>): void {
+    public setCacheTags (tags:Array<string>):void {
         this.set(this.cacheTagHeaderName, tags.join(','))
     }
 }
