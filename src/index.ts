@@ -21,7 +21,8 @@ export const ONE_WEEK = 604800
 /** Number of seconds in one year */
 export const ONE_YEAR = 31536000
 
-// The tiered directive is used by Netlify to indicate that it should use a tiered cache, with a central cache shared by all edge nodes.
+// The tiered directive is used by Netlify to indicate that it should use a
+// tiered cache, with a central cache shared by all edge nodes.
 const tieredDirective = 'durable'
 
 const cdnCacheControlHeaderNames = new Map<CDN, string>([
@@ -160,7 +161,8 @@ export class CacheHeaders extends Headers {
      * otherwise unique. Otherwise, the browser will cache the content
      * indefinitely and never check for updates, including for new deploys.
      *
-     * @param value The number of seconds to set the CDN cache-control s-maxage directive to. Defaults to 1 year.
+     * @param value The number of seconds to set the CDN cache-control s-maxage
+     * directive to. Defaults to 1 year.
      */
     immutable (value:number = ONE_YEAR):this {
         const cdnDirectives = this.getCdnCacheControl()

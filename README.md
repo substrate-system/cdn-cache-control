@@ -4,7 +4,7 @@
 [![module](https://img.shields.io/badge/module-ESM%2FCJS-blue?style=flat-square)](README.md)
 [![semantic versioning](https://img.shields.io/badge/semver-2.0.0-blue?logo=semver&style=flat-square)](https://semver.org/)
 [![Common Changelog](https://nichoth.github.io/badge/common-changelog.svg)](./CHANGELOG.md)
-[![install size](https://flat.badgen.net/packagephobia/install/@substrate-system/cdn-cache-controls)](https://packagephobia.com/result?p=@substrate-system/cdn-cache-controls)
+[![install size](https://flat.badgen.net/packagephobia/install/@substrate-system/cdn-cache-control)](https://packagephobia.com/result?p=@substrate-system/cdn-cache-control)
 [![dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg?style=flat-square)](package.json)
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
@@ -14,12 +14,21 @@
 
 Easy, opinionated CDN cache header handling.
 
-Modern CDNs allow very fine-grained control over the cache. This is particularly useful for server-side rendering of web content, as it allows you to manually handle the invalidation of content, ensuring it stays fast and fresh. This package provides a subclass of the `Headers` class that makes it easier to set cache control headers for content served through a modern CDN. It provides a simple, chainable API with sensible defaults for common use cases. It works by setting the `Cache-Control` and `CDN-Cache-Control` headers to the appropriate values. If run on a supported platform it will use the more specific header for that CDN. e.g. on Netlify it will use the `Netlify-CDN-Cache-Control` header.
+Modern CDNs allow very fine-grained control over the cache. This is particularly
+useful for server-side rendering of web content, as it allows you to manually
+handle the invalidation of content, ensuring it stays fast and fresh. This
+package provides a subclass of the `Headers` class that makes it easier to set
+cache control headers for content served through a modern CDN. It provides a
+simple, chainable API with sensible defaults for common use cases. It works by
+setting the `Cache-Control` and `CDN-Cache-Control` headers to the appropriate
+values. If run on a supported platform it will use the more specific header for
+that CDN. e.g. on Netlify it will use the `Netlify-CDN-Cache-Control` header.
 
 e.g.
 
-```javascript
-// Expires in 1 minute, but use stale-while-revalidate to serve stale content after that
+```js
+// Expires in 1 minute, but use stale-while-revalidate to serve stale content
+// after that
 const headers = new CacheHeaders().ttl(ONE_MINUTE).swr();
 ```
 
@@ -34,38 +43,58 @@ This is a fork of [ascorbic/cdn-cache-control](https://github.com/ascorbic/cdn-c
 ## Installation
 
 ```bash
-npm install cdn-cache-control
+npm i -S cdn-cache-control
 ```
 
-It is also available in [jsr](https://jsr.io) as `@ascorbic/cdn-cache-control`. If using Deno, you can import it directly without installing:
+It is also available in [jsr](https://jsr.io) as `@ascorbic/cdn-cache-control`.
+If using Deno, you can import it directly without installing:
 
-```javascript
+```js
 import { CacheHeaders } from "jsr:@ascorbic/cdn-cache-control";
 ```
 
 ## Usage
 
-The module exports a single class, `CacheHeaders`, which is a subclass of the fetch [`Headers`](https://developer.mozilla.org/en-US/docs/Web/API/Headers) class. It provides a chainable API for setting cache headers. By default it sets the `Cache-Control` and `CDN-Cache-Control` headers to sensible defaults for content that should be cached by the CDN and revalidated by the browser.
+The module exports a single class, `CacheHeaders`, which is a subclass of the
+fetch [`Headers`](https://developer.mozilla.org/en-US/docs/Web/API/Headers)
+class. It provides a chainable API for setting cache headers. By default
+it sets the `Cache-Control` and `CDN-Cache-Control` headers to sensible defaults
+for content that should be cached by the CDN and revalidated by the browser.
 
-It can be instantiated with a `HeadersInit` value, which lets you base it on an existing `Headers` object, or an object or array with existing header values. In that case it will default to using existing `s-maxage` directives if present.
+It can be instantiated with a `HeadersInit` value, which lets you base it on an
+existing `Headers` object, or an object or array with existing header values. In
+that case it will default to using existing `s-maxage` directives if present.
 
-You can pass a `cdn` value as the second argument to set the CDN cache control header. In some cases this will enable targeted cache header names. e.g. for Netlify it will use the `Netlify-CDN-Cache-Control` header. Currently supported values are `netlify`, `vercel`, `cloudflare` and `akamai`. If you don't pass a value, or pass an unsupported one it will use the generic `CDN-Cache-Control` header. It will also attempt to detect the platform automatically on Vercel and Netlify.
+You can pass a `cdn` value as the second argument to set the CDN cache control
+header. In some cases this will enable targeted cache header names. e.g. for
+Netlify it will use the `Netlify-CDN-Cache-Control` header. Currently supported
+values are `netlify`, `vercel`, `cloudflare` and `akamai`. If you don't pass a
+value, or pass an unsupported one it will use the generic `CDN-Cache-Control`
+header. It will also attempt to detect the platform automatically on
+Vercel and Netlify.
 
 ### Use cases
 
-If you have content that you want to have the CDN cache until it is manually revalidated or purged with a new deploy, you can use the default values:
+If you have content that you want to have the CDN cache until it is manually
+revalidated or purged with a new deploy, you can use the default values:
 
-```javascript
+```js
 import { CacheHeaders } from "cdn-cache-control";
 
 const headers = new CacheHeaders();
 ```
 
-This sets the `CDN-Cache-Control` header to `public,s-maxage=31536000,must-revalidate`, which tells the CDN to cache the content for a year. It sets `Cache-Control` to `public,max-age=0,must-revalidate`, which tells the browser to always check with the CDN for a fresh version. You should combine this with an `ETag` or `Last-Modified` header to allow the CDN to serve a `304 Not Modified` response when the content hasn't changed.
+This sets the `CDN-Cache-Control` header to `public,s-maxage=31536000,must-revalidate`,
+which tells the CDN to cache the content for a year. It sets `Cache-Control` to
+`public,max-age=0,must-revalidate`, which tells the browser to always check with
+the CDN for a fresh version. You should combine this with an `ETag` or
+`Last-Modified` header to allow the CDN to serve a `304 Not Modified` response
+when the content hasn't changed.
 
 #### stale-while-revalidate
 
-You can enable `stale-while-revalidate` with the `swr` method, optionally passing a value for the time to serve stale content (defaults to one week):
+You can enable `stale-while-revalidate` with the `swr` method, optionally
+passing a value for the time to serve stale content (defaults to one week):
 
 ```javascript
 import { CacheHeaders } from "cdn-cache-control";
@@ -73,7 +102,10 @@ import { CacheHeaders } from "cdn-cache-control";
 const headers = new CacheHeaders().swr();
 ```
 
-This tells the CDN to serve stale content while revalidating the content in the background. Combine with the `ttl` method to set the time for which the content will be considered fresh (default is zero, meaning the CDN will always revalidate):
+This tells the CDN to serve stale content while revalidating the content in the
+background. Combine with the `ttl` method to set the time for which the content
+will be considered fresh (default is zero, meaning the CDN will
+always revalidate):
 
 ```javascript
 import { CacheHeaders, ONE_HOUR } from "cdn-cache-control";
@@ -83,27 +115,33 @@ const headers = new CacheHeaders().swr().ttl(ONE_HOUR);
 
 #### Immutable content
 
-If you are serving content that is guaranteed to never change then you can set it as immutable. You should only do this for responses with unique URLs, because there will be no way to invalidate it from the browser cache if it ever changes.
+If you are serving content that is guaranteed to never change then you can set
+it as immutable. You should only do this for responses with unique URLs, because
+there will be no way to invalidate it from the browser cache if it ever changes.
 
 ```javascript
 import { CacheHeaders } from "cdn-cache-control";
 const headers = new CacheHeaders().immutable();
 ```
 
-This will set the CDN and browser caches to expire in 1 year, and add the immutable directive.
+This will set the CDN and browser caches to expire in 1 year, and add the
+immutable directive.
 
 #### Cache tags
 
-Some CDNs support the use of cache tags, which allow you to purge content from the cache in bulk. The `tag()` function makes it simple to add tags. You can call it with a string or array of strings.
+Some CDNs support the use of cache tags, which allow you to purge content from
+the cache in bulk. The `tag()` function makes it simple to add tags. You can
+call it with a string or array of strings.
 
-```javascript
+```js
 import { CacheHeaders } from "cdn-cache-control";
 const headers = new CacheHeaders().tag(["blog", "blog:1"]);
 ```
 
-You can then purge the tagged items from the cache using the CDN API. e.g. for Netlify the API is:
+You can then purge the tagged items from the cache using the CDN API. e.g. for
+Netlify the API is:
 
-```typescript
+```ts
 import { purgeCache } from "@netlify/functions";
 
 export default async function handler(req: Request) => {
@@ -117,19 +155,25 @@ export default async function handler(req: Request) => {
 
 #### Using the generated headers
 
-The headers object can be used anywhere that accepts a `fetch` `Headers` object. This includes most serverless hosts. It can also be used directly in many framework SSR functions. Some APIs need a plain object rather than a `Headers` object. For these you can use the `toObject()` method, which returns a plain object with the header names and values.
+The headers object can be used anywhere that accepts a `fetch` `Headers` object.
+This includes most serverless hosts. It can also be used directly in many
+framework SSR functions. Some APIs need a plain object rather than a `Headers`
+object. For these you can use the `toObject()` method, which returns a plain
+object with the header names and values.
 
-```typescript
-import { CacheHeaders } from "cdn-cache-control";
+```ts
+import { CacheHeaders } from "cdn-cache-control"
 
-export default async function handler(request: Request): Promise<Response> {
-  const headers = new CacheHeaders().swr();
+export default async function handler(request:Request):Promise<Response> {
+  const headers = new CacheHeaders().swr()
   // The `Response` constructor accepts the object directly
-  return new Response("Hello", { headers });
+  return new Response('Hello', { headers })
 }
 ```
 
-Some frameworks use a readonly `Response` object, so you need to use an existing `headers` object. In this case you can use the `copyTo` method to copy the headers to the response:
+Some frameworks use a readonly `Response` object, so you need to use an
+existing `headers` object. In this case you can use the `copyTo` method to
+copy the headers to the response:
 
 ```astro
 ---
