@@ -24,9 +24,10 @@
 		}
 	},
 	"scripts": {
-		"build": "tsup",
+		"build": "mkdir -p ./dist && rm -rf ./dist/* && npm run build-esm",
+		"build-esm": "esbuild src/*.ts --format=esm --metafile=dist/meta.json --keep-names --tsconfig=tsconfig.build.json --outdir=./dist --sourcemap && tsc --emitDeclarationOnly --project tsconfig.build.json --outDir dist",
 		"lint": "eslint \"./**/*.{ts,js}\"",
-		"test": "pnpm build && node --test test",
+		"test": "npm run build && node --test test",
 		"toc": "markdown-toc --maxdepth 3 -i README.md",
 		"build-docs": "typedoc ./src/index.ts",
 		"version": "npm run toc && auto-changelog -p --template keepachangelog --breaking-pattern 'BREAKING CHANGE:' && git add CHANGELOG.md README.md",
@@ -35,6 +36,8 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20.14.2",
+		"@typescript-eslint/eslint-plugin": "^8.32.0",
+		"@typescript-eslint/parser": "^8.32.0",
 		"auto-changelog": "^2.5.0",
 		"eslint": "^8.57.0",
 		"eslint-config-standard": "^17.1.0",
