@@ -96,9 +96,11 @@ const headers = new CacheHeaders();
 ```
 
 This sets the `CDN-Cache-Control` header to
-`public,s-maxage=31536000,must-revalidate`,
-which tells the CDN to cache the content for a year. It sets `Cache-Control` to
-`public,max-age=0,must-revalidate`, which tells the browser to always check with
+`public,s-maxage=31536000,must-revalidate`, which tells the CDN to cache the
+content for a year.
+
+It sets `Cache-Control` to `public,max-age=0,must-revalidate`,
+which tells the browser to always check with
 the CDN for a fresh version. You should combine this with an `ETag` or
 `Last-Modified` header to allow the CDN to serve a `304 Not Modified` response
 when the content hasn't changed.
@@ -108,7 +110,7 @@ when the content hasn't changed.
 You can enable `stale-while-revalidate` with the `swr` method, optionally
 passing a value for the time to serve stale content (defaults to one week):
 
-```javascript
+```js
 import { CacheHeaders } from "cdn-cache-control";
 
 const headers = new CacheHeaders().swr();
@@ -119,7 +121,7 @@ background. Combine with the `ttl` method to set the time for which the content
 will be considered fresh (default is zero, meaning the CDN will
 always revalidate):
 
-```javascript
+```js
 import { CacheHeaders, ONE_HOUR } from "cdn-cache-control";
 
 const headers = new CacheHeaders().swr().ttl(ONE_HOUR);
@@ -131,7 +133,7 @@ If you are serving content that is guaranteed to never change then you can set
 it as immutable. You should only do this for responses with unique URLs, because
 there will be no way to invalidate it from the browser cache if it ever changes.
 
-```javascript
+```js
 import { CacheHeaders } from "cdn-cache-control";
 const headers = new CacheHeaders().immutable();
 ```
