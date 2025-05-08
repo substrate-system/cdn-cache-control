@@ -34,6 +34,7 @@
 		"postversion": "git push --follow-tags && npm publish",
 		"prepublishOnly": "npm run build"
 	},
+	"dependencies": {},
 	"devDependencies": {
 		"@types/node": "^20.14.2",
 		"@typescript-eslint/eslint-plugin": "^8.32.0",
