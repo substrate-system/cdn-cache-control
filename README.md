@@ -1,4 +1,13 @@
-<h1 align="center">cdn-cache-control</h1>
+# cdn cache control
+![tests](https://github.com/substrate-system/cdn-cache-control/actions/workflows/nodejs.yml/badge.svg)
+[![types](https://img.shields.io/npm/types/@substrate-system/icons?style=flat-square)](README.md)
+[![module](https://img.shields.io/badge/module-ESM%2FCJS-blue?style=flat-square)](README.md)
+[![semantic versioning](https://img.shields.io/badge/semver-2.0.0-blue?logo=semver&style=flat-square)](https://semver.org/)
+[![Common Changelog](https://nichoth.github.io/badge/common-changelog.svg)](./CHANGELOG.md)
+[![install size](https://flat.badgen.net/packagephobia/install/@nichoth/session-cookie)](https://packagephobia.com/result?p=@nichoth/session-cookie)
+[![dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg?style=flat-square)](package.json)
+[![license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+
 <p align="center">
   <img alt="cdn-cache-control" src="https://github.com/user-attachments/assets/62464d67-cbd5-48b5-a36d-800678ae22bb" />
 </p>
@@ -13,6 +22,14 @@ e.g.
 // Expires in 1 minute, but use stale-while-revalidate to serve stale content after that
 const headers = new CacheHeaders().ttl(ONE_MINUTE).swr();
 ```
+
+<details><summary><h2>Contents</h2></summary>
+<!-- toc -->
+</details>
+
+## fork
+This is a fork of [ascorbic/cdn-cache-control](https://github.com/ascorbic/cdn-cache-control).
+
 
 ## Installation
 

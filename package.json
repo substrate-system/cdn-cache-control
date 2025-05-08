@@ -13,7 +13,6 @@
 	],
 	"exports": {
 		".": {
-			"deno": "./src/index.ts",
 			"import": {
 				"types": "./dist/index.d.ts",
 				"default": "./dist/index.js"
@@ -24,41 +23,28 @@
 			}
 		}
 	},
-	"dependencies": {},
-	"devDependencies": {
-		"@arethetypeswrong/cli": "^0.15.3",
-		"@changesets/cli": "^2.27.7",
-		"@types/node": "^20.14.2",
-		"prettier": "^3.3.1",
-		"publint": "^0.2.8",
-		"tsdoc-markdown": "^0.6.0",
-		"tsup": "^8.1.0",
-		"typescript": "^5.5.3"
-	},
-	"tsup": {
-		"entry": [
-			"src/index.ts"
-		],
-		"splitting": false,
-		"sourcemap": true,
-		"clean": true,
-		"dts": true,
-		"format": [
-			"esm",
-			"cjs"
-		]
-	},
 	"scripts": {
 		"build": "tsup",
-		"lint:types": "attw --pack .",
-		"lint:package": "publint",
-		"lint:prettier": "prettier --check src",
-		"lint": "pnpm run '/^lint:.*/'",
+		"lint": "eslint \"./**/*.{ts,js}\"",
 		"test": "pnpm build && node --test test",
-		"tsdoc": "tsdoc --src=src/index.ts && prettier --write README.md",
-		"version": "changeset version && jq --arg version \"$(jq -r .version package.json)\" '.version = $version' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json"
+		"toc": "markdown-toc --maxdepth 3 -i README.md",
+		"build-docs": "typedoc ./src/index.ts",
+		"version": "npm run toc && auto-changelog -p --template keepachangelog --breaking-pattern 'BREAKING CHANGE:' && git add CHANGELOG.md README.md",
+		"postversion": "git push --follow-tags && npm publish",
+		"prepublishOnly": "npm run build"
 	},
-	"keywords": [],
+	"devDependencies": {
+		"@types/node": "^20.14.2",
+		"auto-changelog": "^2.5.0",
+		"eslint": "^8.57.0",
+		"eslint-config-standard": "^17.1.0",
+		"markdown-toc": "^1.2.0",
+		"typescript": "^5.8.3"
+	},
+	"keywords": [
+		"cache",
+		"headers"
+	],
 	"author": "Matt Kane <m@mk.gg>",
 	"contributors": [
 		{
