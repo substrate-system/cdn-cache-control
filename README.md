@@ -95,7 +95,8 @@ import { CacheHeaders } from "cdn-cache-control";
 const headers = new CacheHeaders();
 ```
 
-This sets the `CDN-Cache-Control` header to `public,s-maxage=31536000,must-revalidate`,
+This sets the `CDN-Cache-Control` header to
+`public,s-maxage=31536000,must-revalidate`,
 which tells the CDN to cache the content for a year. It sets `Cache-Control` to
 `public,max-age=0,must-revalidate`, which tells the browser to always check with
 the CDN for a fresh version. You should combine this with an `ETag` or
