@@ -302,7 +302,8 @@ Number of seconds in one year
 
 #### :gear: tag
 
-Adds a cache tag to the cache tags header. Cache tags are used to invalidate the cache for a URL.
+Adds a cache tag to the cache tags header. Cache tags are used to invalidate
+the cache for a URL.
 
 | Method | Type                                                   |
 | ------ | ------------------------------------------------------ |
@@ -314,7 +315,8 @@ Parameters:
 
 #### :gear: swr
 
-Sets stale-while-revalidate directive for the CDN cache. By default the browser is sent a must-revalidate
+Sets `stale-while-revalidate` directive for the CDN cache. By default the
+browser is sent a must-revalidate
 directive to ensure that the browser always revalidates the cache with the server.
 
 | Method | Type                       |
@@ -323,14 +325,17 @@ directive to ensure that the browser always revalidates the cache with the serve
 
 Parameters:
 
-- `value`: The number of seconds to set the stale-while-revalidate directive to. Defaults to 1 week.
+- `value`: The number of seconds to set the stale-while-revalidate directive to.
+Defaults to 1 week.
 
 #### :gear: immutable
 
-Sets cache headers for content that should be cached for a long time and never revalidated.
-The CDN cache will cache the content for the specified time, and the browser will cache the content
-indefinitely without revalidating. Do not use this unless the URL is fingerprinted or otherwise unique.
-Otherwise, the browser will cache the content indefinitely and never check for updates, including for new deploys.
+Sets cache headers for content that should be cached for a long time and never
+revalidated. The CDN cache will cache the content for the specified time, and
+the browser will cache the content indefinitely without revalidating. Do not
+use this unless the URL is fingerprinted or otherwise unique.  Otherwise, the
+browser will cache the content indefinitely and never check for updates,
+including for new deploys.
 
 | Method      | Type                       |
 | ----------- | -------------------------- |
@@ -338,13 +343,15 @@ Otherwise, the browser will cache the content indefinitely and never check for u
 
 Parameters:
 
-- `value`: The number of seconds to set the CDN cache-control s-maxage directive to. Defaults to 1 year.
+- `value`: The number of seconds to set the CDN cache-control s-maxage
+directive to. Defaults to 1 year.
 
 #### :gear: ttl
 
-Sets the s-maxage for items in the CDN cache. This is the maximum amount of time that the CDN will cache the content.
-If used with swr, the content will revalidate in the background after the max age has passed. Otherwise, the content will be
-removed from the cache after the max age has passed.
+Sets the s-maxage for items in the CDN cache. This is the maximum amount of time
+that the CDN will cache the content. If used with swr, the content will
+revalidate in the background after the max age has passed. Otherwise, the
+content will be removed from the cache after the max age has passed.
 
 | Method | Type                      |
 | ------ | ------------------------- |
