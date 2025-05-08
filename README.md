@@ -101,9 +101,10 @@ content for a year.
 
 It sets `Cache-Control` to `public,max-age=0,must-revalidate`,
 which tells the browser to always check with
-the CDN for a fresh version. You should combine this with an `ETag` or
-`Last-Modified` header to allow the CDN to serve a `304 Not Modified` response
-when the content hasn't changed.
+the CDN for a fresh version.
+
+You should combine this with an `ETag` or `Last-Modified` header to allow
+the CDN to serve a `304 Not Modified` response when the content hasn't changed.
 
 #### stale-while-revalidate
 
