@@ -27,8 +27,8 @@ that CDN. e.g. on Netlify it will use the `Netlify-CDN-Cache-Control` header.
 e.g.
 
 ```js
-// Expires in 1 minute, but use stale-while-revalidate to serve stale content
-// after that
+// Expires in 1 minute, but use stale-while-revalidate to
+// serve stale content after that
 const headers = new CacheHeaders().ttl(ONE_MINUTE).swr();
 ```
 
