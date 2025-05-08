@@ -64,13 +64,6 @@ This is a fork of [ascorbic/cdn-cache-control](https://github.com/ascorbic/cdn-c
 npm i -S cdn-cache-control
 ```
 
-It is also available in [jsr](https://jsr.io) as `@ascorbic/cdn-cache-control`.
-If using Deno, you can import it directly without installing:
-
-```js
-import { CacheHeaders } from "jsr:@ascorbic/cdn-cache-control";
-```
-
 ## Usage
 
 The module exports a single class, `CacheHeaders`, which is a subclass of the
